@@ -3,6 +3,6 @@ Repositório para armazenamento dos exercícios da matéria programação estrut
 
 Todos os exercícios foram feitos utilizando a linguagem C.
 
-Professor: Philippe Leal
+Professor(a): Philippe Leal
 
 IDE utilizada para desenvolvimento: Dev-C++
