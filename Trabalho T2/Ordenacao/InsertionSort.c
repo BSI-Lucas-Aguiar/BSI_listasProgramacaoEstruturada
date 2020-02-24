@@ -1,4 +1,4 @@
-//Lucas de Figueiredo, Mateus Freitas, Elias Júnior
+//Lucas de Figueiredo
 //InsertionSort Ordenado de maneira Não Crescente
 #include <stdio.h>
 #include <time.h>

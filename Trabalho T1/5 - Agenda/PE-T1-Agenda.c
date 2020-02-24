@@ -1,4 +1,4 @@
-//Lucas de Figueiredo, Elias Júnior, Mateus Freitas, Edgar Figueira, Adrielle Barbosa
+//Lucas de Figueiredo
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

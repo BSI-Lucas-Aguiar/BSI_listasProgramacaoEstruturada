@@ -1,5 +1,5 @@
-//Lucas de Figueiredo, Mateus Freitas, Elias Júnior
-//BubbleSort Ordenado de maneira Não Crescente
+//Lucas de Figueiredo
+//QuickSort Ordenado de maneira Não Crescente
 #include <stdio.h>
 #include <time.h>
 #define A 5000
@@ -8,43 +8,47 @@
 #define D 30000
 
 void lerVetor(FILE *arqA, FILE *arqB, FILE *arqC, FILE *arqD, int vetorA[], int vetorB[], int vetorC[], int vetorD[]);
-void ordenaBubble(int vetor[], int tam);
+void ordenaQuick(int vetor[],int ini, int fim);
 void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[], FILE *arqSaida);
+int particiona(int vetor[], int ini, int fim);
 
 void inicioTempo(float *timer);
 void fimTempo(float timer);
 
 int main(){
 	FILE *arqA, *arqB, *arqC, *arqD, *arqSaida;
-	int vetorA[A], vetorB[B], vetorC[C], vetorD[D];
+	int vetorA[A], vetorB[B], vetorC[C], vetorD[D], ini=0, fim;
 	float timer;
 	//Leitura dos arquivos
 	lerVetor(arqA, arqB, arqC, arqD, vetorA, vetorB, vetorC, vetorD);
 	
-	//Ordenação dos Vetores lidos
+	//Ordenação dos vetores lidos
 	printf("\nVetor A:");
+	fim=A-1;
 	inicioTempo(&timer);
-	ordenaBubble(vetorA, A);
+	ordenaQuick(vetorA, ini, fim);
 	fimTempo(timer);
-	
+
 	printf("\nVetor B:");
+	fim=B-1;
 	inicioTempo(&timer);
-	ordenaBubble(vetorB, B);
+	ordenaQuick(vetorB, ini, fim);
 	fimTempo(timer);
-	
+
 	printf("\nVetor C:");
+	fim=C-1;
 	inicioTempo(&timer);
-	ordenaBubble(vetorC, C);
+	ordenaQuick(vetorC, ini, fim);
 	fimTempo(timer);
-	
+
 	printf("\nVetor D:");
+	fim=D-1;
 	inicioTempo(&timer);
-	ordenaBubble(vetorD, D);
+	ordenaQuick(vetorD, ini, fim);
 	fimTempo(timer);
-	
 	//Impressão em novos arquivos de maneira ordenada
 	imprimeVetorOrdenado(vetorA, vetorB, vetorC, vetorD, arqSaida);
-	
+
 	return 0;
 }
 
@@ -88,55 +92,68 @@ void lerVetor(FILE *arqA, FILE *arqB, FILE *arqC, FILE *arqD, int vetorA[], int 
 	printf("\nArquivo D lido.");
 }
 
-//Ordenação utilizando BubbleSort
-void ordenaBubble(int vetor[], int tam){
-	int i, j, aux;
-	for(i=0; i<tam; i++){
-		for(j=0; j<tam-1; j++){
-			if(vetor[j]<vetor[j+1]){
-				aux=vetor[j];
-				vetor[j]=vetor[j+1];
-				vetor[j+1]=aux;
-			}
+//Ordenação utilizando QuickSort
+void ordenaQuick(int vetor[], int ini, int fim){
+	int pivo;
+	if(ini<fim){
+		pivo=particiona(vetor, ini, fim);
+		ordenaQuick(vetor, ini, pivo-1);
+		ordenaQuick(vetor, pivo+1, fim);
+	}
+}
+
+int particiona(int vetor[], int ini, int fim){
+	int pivo=vetor[ini], i=ini, j, aux;
+	for(j = ini+1; j <= fim; j++){
+		if(vetor[j] >= pivo){
+			i++;
+			aux=vetor[i]; 
+			vetor[i]=vetor[j]; 
+			vetor[j]=aux; 
 		}
 	}
+	aux=vetor[i]; 
+	vetor[i]=vetor[ini]; 
+	vetor[ini]=aux;
+
+	return i;
 }
 
 //Impressão dos vetores já ordenados no novo arquivo.
 void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[], FILE *arqSaida){
 	int i;
 	//Imprime A
-	arqSaida=fopen("BubbleOrdenado-A.txt", "w");
+	arqSaida=fopen("QuickOrdenado-A.txt", "w");
 	for(i=0; i<A; i++){
 		fprintf(arqSaida, "%d ", vetorA[i]);
 	}
 	fclose(arqSaida);
 	printf("\nArquivo A impresso.");
-	
+
 	//Imprime B
-	arqSaida=fopen("BubbleOrdenado-B.txt", "w");
+	arqSaida=fopen("QuickOrdenado-B.txt", "w");
 	for(i=0; i<B; i++){
 		fprintf(arqSaida, "%d ", vetorB[i]);
 	}
 	fclose(arqSaida);
 	printf("\nArquivo B impresso.");
-	
+
 	//Imprime C
-	arqSaida=fopen("BubbleOrdenado-C.txt", "w");
+	arqSaida=fopen("QuickOrdenado-C.txt", "w");
 	for(i=0; i<C; i++){
 		fprintf(arqSaida, "%d ", vetorC[i]);
 	}
 	fclose(arqSaida);
 	printf("\nArquivo C impresso.");
-	
+
 	//Imprime D
-	arqSaida=fopen("BubbleOrdenado-D.txt", "w");
+	arqSaida=fopen("QuickOrdenado-D.txt", "w");
 	for(i=0; i<D; i++){
 		fprintf(arqSaida, "%d ", vetorD[i]);
 	}
 	fclose(arqSaida);
 	printf("\nArquivo D impresso.");
-	
+
 }
 //Funções de Início e fim do calculo de tempo
 void inicioTempo(float *timer){

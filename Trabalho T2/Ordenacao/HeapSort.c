@@ -1,5 +1,5 @@
-//Lucas de Figueiredo, Mateus Freitas, Elias Júnior
-//QuickSort Ordenado de maneira Não Crescente
+//Lucas de Figueiredo
+//HeapSort Ordenado de maneira Não Crescente
 #include <stdio.h>
 #include <time.h>
 #define A 5000
@@ -8,44 +8,41 @@
 #define D 30000
 
 void lerVetor(FILE *arqA, FILE *arqB, FILE *arqC, FILE *arqD, int vetorA[], int vetorB[], int vetorC[], int vetorD[]);
-void ordenaQuick(int vetor[],int ini, int fim);
+void ordenaHeap(int vetor[], int tam);
+void cria_heap(int vetor[], int TAM, int indice_raiz);
 void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[], FILE *arqSaida);
-int particiona(int vetor[], int ini, int fim);
 
 void inicioTempo(float *timer);
 void fimTempo(float timer);
 
 int main(){
 	FILE *arqA, *arqB, *arqC, *arqD, *arqSaida;
-	int vetorA[A], vetorB[B], vetorC[C], vetorD[D], ini=0, fim;
+	int vetorA[A], vetorB[B], vetorC[C], vetorD[D];
 	float timer;
-	//Leitura dos arquivos
+	//Leiruta dos arquivos
 	lerVetor(arqA, arqB, arqC, arqD, vetorA, vetorB, vetorC, vetorD);
 	
 	//Ordenação dos vetores lidos
 	printf("\nVetor A:");
-	fim=A-1;
 	inicioTempo(&timer);
-	ordenaQuick(vetorA, ini, fim);
+	ordenaHeap(vetorA, A-1);
 	fimTempo(timer);
 
 	printf("\nVetor B:");
-	fim=B-1;
 	inicioTempo(&timer);
-	ordenaQuick(vetorB, ini, fim);
+	ordenaHeap(vetorB, B-1);
 	fimTempo(timer);
 
 	printf("\nVetor C:");
-	fim=C-1;
 	inicioTempo(&timer);
-	ordenaQuick(vetorC, ini, fim);
+	ordenaHeap(vetorC, C-1);
 	fimTempo(timer);
 
 	printf("\nVetor D:");
-	fim=D-1;
 	inicioTempo(&timer);
-	ordenaQuick(vetorD, ini, fim);
+	ordenaHeap(vetorD, D-1);
 	fimTempo(timer);
+	
 	//Impressão em novos arquivos de maneira ordenada
 	imprimeVetorOrdenado(vetorA, vetorB, vetorC, vetorD, arqSaida);
 
@@ -92,38 +89,44 @@ void lerVetor(FILE *arqA, FILE *arqB, FILE *arqC, FILE *arqD, int vetorA[], int 
 	printf("\nArquivo D lido.");
 }
 
-//Ordenação utilizando QuickSort
-void ordenaQuick(int vetor[], int ini, int fim){
-	int pivo;
-	if(ini<fim){
-		pivo=particiona(vetor, ini, fim);
-		ordenaQuick(vetor, ini, pivo-1);
-		ordenaQuick(vetor, pivo+1, fim);
+//Ordenação utilizando HeapSort
+void cria_heap(int *vetor, int TAM, int indice_raiz){
+	int ramificacao, valor;
+    valor = vetor[indice_raiz];
+    
+    while(indice_raiz <= TAM/2){    
+    	ramificacao = 2 * indice_raiz;
+    
+    if(ramificacao < TAM && vetor[ramificacao] > vetor[ramificacao+1])
+    	ramificacao++;
+        if(valor <= vetor[ramificacao])
+     		break;
+
+    	vetor[indice_raiz] = vetor[ramificacao];
+    	indice_raiz = ramificacao;
 	}
+
+    vetor[indice_raiz] = valor;
 }
 
-int particiona(int vetor[], int ini, int fim){
-	int pivo=vetor[ini], i=ini, j, aux;
-	for(j = ini+1; j <= fim; j++){
-		if(vetor[j] >= pivo){
-			i++;
-			aux=vetor[i]; 
-			vetor[i]=vetor[j]; 
-			vetor[j]=aux; 
-		}
-	}
-	aux=vetor[i]; 
-	vetor[i]=vetor[ini]; 
-	vetor[ini]=aux;
-
-	return i;
+void ordenaHeap(int vetor[], int TAM){
+	int indice, troca;
+	for(indice = TAM/2; indice >= 0; indice--)
+    	cria_heap(vetor, TAM, indice);    
+	    
+	    while(TAM > 0){
+			troca = vetor[0];
+			vetor[0] = vetor[TAM];
+			vetor[TAM] = troca;
+			cria_heap(vetor, --TAM, 0);
+ 		}
 }
 
 //Impressão dos vetores já ordenados no novo arquivo.
 void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[], FILE *arqSaida){
 	int i;
 	//Imprime A
-	arqSaida=fopen("QuickOrdenado-A.txt", "w");
+	arqSaida=fopen("HeapOrdenado-A.txt", "w");
 	for(i=0; i<A; i++){
 		fprintf(arqSaida, "%d ", vetorA[i]);
 	}
@@ -131,7 +134,7 @@ void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[]
 	printf("\nArquivo A impresso.");
 
 	//Imprime B
-	arqSaida=fopen("QuickOrdenado-B.txt", "w");
+	arqSaida=fopen("HeapOrdenado-B.txt", "w");
 	for(i=0; i<B; i++){
 		fprintf(arqSaida, "%d ", vetorB[i]);
 	}
@@ -139,7 +142,7 @@ void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[]
 	printf("\nArquivo B impresso.");
 
 	//Imprime C
-	arqSaida=fopen("QuickOrdenado-C.txt", "w");
+	arqSaida=fopen("HeapOrdenado-C.txt", "w");
 	for(i=0; i<C; i++){
 		fprintf(arqSaida, "%d ", vetorC[i]);
 	}
@@ -147,7 +150,7 @@ void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[]
 	printf("\nArquivo C impresso.");
 
 	//Imprime D
-	arqSaida=fopen("QuickOrdenado-D.txt", "w");
+	arqSaida=fopen("HeapOrdenado-D.txt", "w");
 	for(i=0; i<D; i++){
 		fprintf(arqSaida, "%d ", vetorD[i]);
 	}

@@ -1,5 +1,5 @@
-//Lucas de Figueiredo, Mateus Freitas, Elias Júnior
-//HeapSort Ordenado de maneira Não Crescente
+//Lucas de Figueiredo
+//SelectionSort Ordenado de maneira Não Crescente
 #include <stdio.h>
 #include <time.h>
 #define A 5000
@@ -8,8 +8,7 @@
 #define D 30000
 
 void lerVetor(FILE *arqA, FILE *arqB, FILE *arqC, FILE *arqD, int vetorA[], int vetorB[], int vetorC[], int vetorD[]);
-void ordenaHeap(int vetor[], int tam);
-void cria_heap(int vetor[], int TAM, int indice_raiz);
+void ordenaSelection(int vetor[], int tam);
 void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[], FILE *arqSaida);
 
 void inicioTempo(float *timer);
@@ -19,28 +18,28 @@ int main(){
 	FILE *arqA, *arqB, *arqC, *arqD, *arqSaida;
 	int vetorA[A], vetorB[B], vetorC[C], vetorD[D];
 	float timer;
-	//Leiruta dos arquivos
+	//Leitura dos arquivos
 	lerVetor(arqA, arqB, arqC, arqD, vetorA, vetorB, vetorC, vetorD);
-	
+
 	//Ordenação dos vetores lidos
 	printf("\nVetor A:");
 	inicioTempo(&timer);
-	ordenaHeap(vetorA, A-1);
+	ordenaSelection(vetorA, A);
 	fimTempo(timer);
-
+	
 	printf("\nVetor B:");
 	inicioTempo(&timer);
-	ordenaHeap(vetorB, B-1);
+	ordenaSelection(vetorB, B);
 	fimTempo(timer);
-
+	
 	printf("\nVetor C:");
 	inicioTempo(&timer);
-	ordenaHeap(vetorC, C-1);
+	ordenaSelection(vetorC, C);
 	fimTempo(timer);
-
+	
 	printf("\nVetor D:");
 	inicioTempo(&timer);
-	ordenaHeap(vetorD, D-1);
+	ordenaSelection(vetorD, D);
 	fimTempo(timer);
 	
 	//Impressão em novos arquivos de maneira ordenada
@@ -89,44 +88,28 @@ void lerVetor(FILE *arqA, FILE *arqB, FILE *arqC, FILE *arqD, int vetorA[], int 
 	printf("\nArquivo D lido.");
 }
 
-//Ordenação utilizando HeapSort
-void cria_heap(int *vetor, int TAM, int indice_raiz){
-	int ramificacao, valor;
-    valor = vetor[indice_raiz];
-    
-    while(indice_raiz <= TAM/2){    
-    	ramificacao = 2 * indice_raiz;
-    
-    if(ramificacao < TAM && vetor[ramificacao] > vetor[ramificacao+1])
-    	ramificacao++;
-        if(valor <= vetor[ramificacao])
-     		break;
-
-    	vetor[indice_raiz] = vetor[ramificacao];
-    	indice_raiz = ramificacao;
+//Ordenação utilizando SelectionSort
+void ordenaSelection(int vetor[], int tam){
+	int i, j, aux, min;
+	
+	for(i=0; i<tam-1; i++){
+		min=i;
+		for(j=i+1; j<tam; j++){
+			if(vetor[j]>vetor[min]){
+				min=j;
+			}
+		}
+		aux=vetor[i];
+		vetor[i]=vetor[min];
+		vetor[min]=aux;
 	}
-
-    vetor[indice_raiz] = valor;
-}
-
-void ordenaHeap(int vetor[], int TAM){
-	int indice, troca;
-	for(indice = TAM/2; indice >= 0; indice--)
-    	cria_heap(vetor, TAM, indice);    
-	    
-	    while(TAM > 0){
-			troca = vetor[0];
-			vetor[0] = vetor[TAM];
-			vetor[TAM] = troca;
-			cria_heap(vetor, --TAM, 0);
- 		}
 }
 
 //Impressão dos vetores já ordenados no novo arquivo.
 void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[], FILE *arqSaida){
 	int i;
 	//Imprime A
-	arqSaida=fopen("HeapOrdenado-A.txt", "w");
+	arqSaida=fopen("SelectionOrdenado-A.txt", "w");
 	for(i=0; i<A; i++){
 		fprintf(arqSaida, "%d ", vetorA[i]);
 	}
@@ -134,7 +117,7 @@ void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[]
 	printf("\nArquivo A impresso.");
 
 	//Imprime B
-	arqSaida=fopen("HeapOrdenado-B.txt", "w");
+	arqSaida=fopen("SelectionOrdenado-B.txt", "w");
 	for(i=0; i<B; i++){
 		fprintf(arqSaida, "%d ", vetorB[i]);
 	}
@@ -142,7 +125,7 @@ void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[]
 	printf("\nArquivo B impresso.");
 
 	//Imprime C
-	arqSaida=fopen("HeapOrdenado-C.txt", "w");
+	arqSaida=fopen("SelectionOrdenado-C.txt", "w");
 	for(i=0; i<C; i++){
 		fprintf(arqSaida, "%d ", vetorC[i]);
 	}
@@ -150,7 +133,7 @@ void imprimeVetorOrdenado(int vetorA[], int vetorB[], int vetorC[], int vetorD[]
 	printf("\nArquivo C impresso.");
 
 	//Imprime D
-	arqSaida=fopen("HeapOrdenado-D.txt", "w");
+	arqSaida=fopen("SelectionOrdenado-D.txt", "w");
 	for(i=0; i<D; i++){
 		fprintf(arqSaida, "%d ", vetorD[i]);
 	}
