@@ -1,2 +1,2 @@
 #ignorar todos os executaveis .exe
-*.exe
+/**.exe
